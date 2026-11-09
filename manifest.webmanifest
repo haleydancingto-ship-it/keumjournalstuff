@@ -1,0 +1,14 @@
+{
+  "name": "내 일정",
+  "short_name": "내 일정",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fbfbf8",
+  "theme_color": "#fbfbf8",
+  "icons": [
+    { "src": "icon-180.png?v=3", "sizes": "180x180", "type": "image/png" },
+    { "src": "icon-512.png?v=3", "sizes": "512x512", "type": "image/png" }
+  ]
+}

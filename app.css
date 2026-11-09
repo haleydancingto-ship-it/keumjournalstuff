@@ -1,0 +1,427 @@
+@font-face{font-family:'KR Small';src:local('AppleSDGothicNeo-Regular'),local('Apple SD Gothic Neo'),local('NotoSansKR-Regular'),local('Noto Sans KR'),local('Noto Sans CJK KR'),local('Malgun Gothic');font-weight:400;size-adjust:93%;unicode-range:U+1100-11FF,U+3130-318F,U+AC00-D7A3}
+@font-face{font-family:'KR Small';src:local('AppleSDGothicNeo-Medium'),local('Apple SD Gothic Neo Medium'),local('NotoSansKR-Medium'),local('Noto Sans KR Medium'),local('Noto Sans CJK KR Medium'),local('Malgun Gothic');font-weight:500;size-adjust:93%;unicode-range:U+1100-11FF,U+3130-318F,U+AC00-D7A3}
+@font-face{font-family:'KR Small';src:local('AppleSDGothicNeo-Bold'),local('Apple SD Gothic Neo Bold'),local('NotoSansKR-Bold'),local('Noto Sans KR Bold'),local('Noto Sans CJK KR Bold'),local('Malgun Gothic Bold');font-weight:700;size-adjust:93%;unicode-range:U+1100-11FF,U+3130-318F,U+AC00-D7A3}
+
+:root{--ink:#141414;--paper:#fbfbf8;--red:#e0352b}
+html,body{margin:0;height:100%;background:var(--paper);overflow:hidden;-webkit-text-size-adjust:100%}
+body{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+#stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#board{width:1180px;height:820px;flex:none;box-sizing:border-box;position:relative;overflow:hidden;background:var(--paper);color:var(--ink);font-family:'IBM Plex Mono','KR Small',-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif;font-size:17px;font-weight:700;line-height:1.08;padding:38px 170px 34px 78px;display:flex;flex-direction:column;gap:20px;transform-origin:center center}
+button,input{-webkit-appearance:none;appearance:none;border-radius:0;font:inherit;color:inherit;margin:0}
+button{background:none;border:0;padding:0;cursor:pointer}
+input:focus,[contenteditable]:focus{outline:none}
+form{margin:0}
+
+.riso{background:#5fd97c url(tex.jpg) 0 0/240px 240px}
+.riso2{background:#5fd97c url(tex.jpg) -90px -60px/240px 240px}
+.riso3{background:#5fd97c url(tex.jpg) -160px -20px/240px 240px}
+.riso-hl{background:linear-gradient(var(--paper) 0 52%,transparent 52% 92%,var(--paper) 92%),url(tex.jpg) -40px -150px/240px 240px}
+.riso-t{background:linear-gradient(rgba(0,95,35,.55),rgba(0,95,35,.55)),url(tex.jpg) 0 0/200px 200px;-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.hd{display:flex;align-items:baseline;gap:10px;font-size:15px}
+.hd .sum{margin-left:auto;font-size:13px}
+.main{display:flex;gap:32px;flex-grow:1;min-height:0}
+.left{flex:1 1 0;display:flex;flex-direction:column;min-width:0}
+.side{width:196px;flex:none;display:flex;flex-direction:column;gap:6px;padding-top:4px;font-size:15px;min-height:0;overflow:hidden}
+.bk{align-self:flex-start;background:var(--ink);color:var(--paper);font-size:13px;letter-spacing:.04em;padding:5px 12px}
+.red{color:var(--red)}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+
+nav.tabs{position:absolute;top:112px;right:44px;display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:17px}
+nav.tabs a{color:var(--ink);text-decoration:none}
+nav.tabs a.on{padding:3px 10px;margin-right:-10px;transform:rotate(-1.5deg)}
+.out{position:absolute;right:44px;bottom:34px;font-size:12px}
+
+/* 할 일 */
+.ck{width:16px;height:16px;flex:none;box-sizing:border-box;border:2.5px solid var(--ink);background:#fff;padding:0}
+.ck svg{display:block;width:100%;height:100%}
+.todos{display:flex;flex-direction:column;gap:6px}
+.todo{display:flex;align-items:center;gap:12px}
+.todo .tx{flex-grow:1;min-width:0;cursor:text}
+.todo.done .tx{text-decoration:line-through;text-decoration-color:var(--red);text-decoration-thickness:3px}
+.todo .tag{font-size:13px;flex:none}
+.add{display:flex;align-items:center;gap:12px}
+.add .plus{width:16px;flex:none;text-align:center;font-size:20px}
+.add input,.edit{flex-grow:1;min-width:0;border:0;border-bottom:3px solid var(--ink);background:transparent;padding:6px 0}
+.side .add{gap:10px}
+.side .add input,.side .edit{padding:4px 0}
+.side .todos{gap:5px}
+.side .todo{gap:8px;font-size:14px}
+.side .ck{width:13px;height:13px;border-width:2px}
+
+/* 오늘 오른쪽 */
+.today-side{width:400px;flex:none;display:flex;flex-direction:column;gap:6px}
+.sched{padding:21px 18px 23px;display:flex;flex-direction:column;gap:3px}
+.sched .h{display:flex;justify-content:space-between;font-size:13px;letter-spacing:.04em}
+.sched .e{display:flex;gap:12px;align-items:baseline}
+.sched .e .t{width:36px;flex:none}
+.sched .e .n{flex-grow:1}
+.sched .e .x{font-size:13px}
+
+.mini{align-self:flex-end;text-align:right;font-size:12px}
+
+/* 달력 공통 */
+.ctl{display:flex;align-items:baseline;gap:14px;margin-bottom:12px}
+.ctl .ttl{font-size:26px;letter-spacing:-.01em}
+.ctl .sw{margin-left:auto;display:flex;gap:4px;font-size:15px;align-items:center}
+.ctl .sw button{font-size:14px;padding:0 6px;line-height:1;display:flex;align-items:center}
+.ctl .sw a{color:var(--ink);text-decoration:none;padding:2px 8px}
+
+/* 월간 */
+.wd{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:0 7px 6px;font-size:18px;font-family:'Noto Sans KR','Noto Sans CJK KR','Apple SD Gothic Neo',sans-serif;font-weight:900}
+.wk{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-top:1.5px solid var(--ink);height:var(--rowh,100px)}
+.wk:last-child{border-bottom:1.5px solid var(--ink)}
+.cell{padding:6px 7px 7px;display:flex;flex-direction:column;gap:3px;font-size:14px;min-width:0;overflow:hidden;cursor:pointer;font-family:'KR Space','IBM Plex Mono','KR Small',-apple-system,'Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+.cell+.cell{border-left:1.5px solid var(--ink)}
+.cell b{margin-bottom:3px;align-self:flex-start;padding:0 5px;margin-left:-5px;font-weight:600;font-size:16px}
+
+.cell b.now{background:var(--ink);color:var(--paper);align-self:stretch;margin:-6px -7px 3px;padding:5px 7px 4px}
+.ln{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* 오른쪽 날짜 목록 */
+.ev{display:flex;gap:8px;cursor:text}
+.ev .t{width:34px;flex:none}
+.ev .n{min-width:0;word-break:keep-all}
+.lbl{margin-top:10px;font-size:13px}
+
+/* 주간 */
+.wgrid{display:grid;grid-template-columns:34px repeat(7,minmax(0,1fr))}
+.dh{display:flex;align-items:baseline;gap:6px;font-size:13px;padding:0 0 6px 6px;cursor:pointer;justify-content:center;padding-left:0;align-self:stretch;padding-top:4px;margin-bottom:0}
+.dh .n{padding:0 4px}
+.dh .n.now{background:var(--ink);color:var(--paper)}
+
+.allday{padding:0 4px 4px;display:flex;flex-direction:column;gap:2px;min-width:0}
+
+.hours{position:relative;height:560px;font-size:11px;border-top:1.5px solid var(--ink)}
+.hours span{position:absolute}
+.col{position:relative;height:560px;cursor:pointer;padding-left:1.5px;box-sizing:border-box}
+.col::before{content:"";position:absolute;left:0;right:0;top:0;height:0;border-top:1.5px solid var(--ink);z-index:3;pointer-events:none}
+.col::after{content:"";position:absolute;left:0;top:0;bottom:0;width:0;border-left:1.5px solid var(--ink);z-index:3;pointer-events:none}   /* 세로줄은 초록 블록보다 위에 */
+.blk{position:absolute;left:4px;right:4px;box-sizing:border-box;padding:4px 5px;font-size:12px;line-height:1.1;overflow:hidden;word-break:keep-all}
+.blk.work{border:1.5px solid var(--ink);background:var(--paper)}
+.nowline{position:absolute;left:0;right:0;height:2.5px;background:var(--red)}
+.nowsq{position:absolute;left:-4px;width:8px;height:8px;background:var(--red)}
+
+/* 로그인 · 준비 중 */
+.login{display:flex;flex-direction:column;gap:14px;width:360px}
+.login input{border:0;border-bottom:3px solid var(--ink);background:transparent;padding:6px 0}
+.btn{align-self:flex-start;font-size:14px;background:var(--paper);border:2.5px solid var(--ink);padding:3px 9px;line-height:1.1}
+.soon{font-size:13px}
+
+/* 근무 */
+.mr{display:grid;grid-template-columns:minmax(0,1fr) 84px 104px 60px;column-gap:12px;align-items:baseline;border-top:1.5px solid var(--ink);padding:10px 0 11px;cursor:pointer}
+.hd2{font-size:12px;border-top:0!important;padding:0 0 6px!important;cursor:default!important}
+.hd2 .r{font-size:12px}
+.mr.hd2{font-size:12px;border-top:0;padding:0 0 6px;cursor:default}
+.mr.hd2 .r{font-size:12px}
+.mr .nm{font-size:19px}
+.mr .sub{font-size:13px;margin-top:5px;line-height:1.25}
+.r{text-align:right;font-size:15px}
+.kv{display:flex;justify-content:space-between}
+
+.mu{color:#6a6a66}
+.ul{border-bottom:2.5px solid var(--ink);padding:2px 0;font-size:14px;align-self:flex-start}
+.lk{align-self:flex-start;margin-top:14px;font-size:13px}
+.lb{font-size:13px;margin-top:12px;cursor:pointer}
+.side [data-act="pf"],.side [data-act="pl-name"],.side [data-act="pl-int"]{cursor:text}
+textarea.edit{font:inherit;font-size:14px;line-height:1.4;resize:none;border:1.5px solid var(--ink);padding:4px 6px}
+
+/* 오늘 · 작업 중 */
+.nw{display:flex;flex-direction:column;margin-top:22px;gap:12px}
+
+/* 프로젝트 */
+.cur{border-bottom:2.5px solid var(--ink)}
+.scroll{overflow-y:auto;min-height:0;flex-shrink:1}
+.lnk{color:var(--ink);text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;word-break:break-all;font-size:14px}
+.note{margin:0;font-family:-apple-system,'Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;font-size:14px;font-weight:600;line-height:1.4;word-break:keep-all;white-space:pre-wrap}
+
+/* 기록 */
+.strip{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);padding:7px 0}
+
+.diary{margin:0;flex-grow:1;align-self:stretch;overflow-y:auto;font-family:-apple-system,'Apple SD Gothic Neo','Noto Sans KR','Noto Sans CJK KR',sans-serif;font-size:16px;line-height:1.45;word-spacing:-.04em;word-break:keep-all;white-space:pre-wrap;max-width:600px;min-height:200px}
+.ent{display:flex;flex-direction:column;gap:3px;border-top:1.5px solid var(--ink);padding:7px 0 8px;font-size:13px;cursor:pointer}
+.ent.last{border-bottom:1.5px solid var(--ink)}
+
+/* 식물 */
+.tlg{--nw:150px;display:flex;align-items:flex-start;position:relative}
+.tl-hd,.tl-row{display:grid;align-items:center;position:relative;grid-template-columns:repeat(var(--n),var(--cw))}
+.tl-hd{font-size:11px;height:22px;box-sizing:border-box;padding-bottom:0;border-bottom:1.5px solid var(--ink);align-items:center}
+
+.tl-row .nm{display:flex;flex-direction:column;gap:2px;min-width:0;cursor:pointer;align-items:flex-start}
+
+.tl-row .nm b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;padding:1px 4px;margin-left:-4px}
+.tl-row .nm small{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tl-row.sel .nm b{background:var(--ink);color:var(--paper)}
+.tl-row i{display:block;width:12px;height:12px;box-sizing:border-box;margin:0 auto;position:relative;cursor:pointer;z-index:1}
+.tl-row i::before{content:"";position:absolute;inset:-14px -4px}
+.tl-row i.w{border:0}
+.tl-row i.m::after{content:"";position:absolute;right:-5px;top:-6px;width:6px;height:6px;border-radius:50%;background:var(--ink)}
+.tl-row i.on{outline:2px solid var(--ink);outline-offset:2px}
+.tday{position:relative;text-align:center}
+.tday i{position:absolute;left:50%;bottom:-5px;width:7px;height:7px;margin-left:-3.5px;border-radius:50%;background:var(--red);display:none}
+.pop{position:absolute;bottom:34px;z-index:2;background:var(--paper);border:1.5px solid var(--ink);padding:6px 8px;width:168px;font-size:12px;line-height:1.3;display:flex;flex-direction:column;gap:3px}
+.pop span{font-weight:600}
+.pmemo{width:100%;box-sizing:border-box;border:0;border-bottom:3px solid var(--ink);background:transparent;font-size:14px;padding:4px 0}
+.gr{display:grid;grid-template-columns:200px minmax(0,1fr) 60px;gap:12px;align-items:baseline;border-top:1.5px solid var(--ink);padding:9px 0;font-size:14px;cursor:pointer}
+.gr b{font-size:17px;justify-self:start}
+.gr.last{border-bottom:1.5px solid var(--ink)}
+
+/* 통계 */
+.big{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}
+.big div{padding:8px 0 9px;display:flex;flex-direction:column;gap:4px}
+.big div+div{border-left:1.5px solid var(--ink);padding-left:10px}
+.big b{font-size:30px;letter-spacing:-.01em}
+.big span{font-size:12px}
+.chart{display:flex;align-items:flex-end;gap:3px;height:150px;border-bottom:1.5px solid var(--ink)}
+.dy{flex:1 1 0;display:flex;flex-direction:column;justify-content:flex-end;position:relative;height:100%;cursor:pointer}
+.dy i{display:block}
+.jb{background:var(--ink)}
+.dy span{position:absolute;bottom:-17px;left:50%;transform:translateX(-50%);font-size:11px;line-height:12px;white-space:nowrap}
+.dy.sel::after{content:"";position:absolute;left:50%;bottom:-15.5px;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:var(--red)}
+.hb{display:flex;align-items:flex-end;gap:3px;height:62px;border-bottom:1.5px solid var(--ink)}
+.hb i{flex:1 1 0;display:block}
+.pbs{display:grid;grid-template-columns:max-content minmax(60px,1fr) 44px;column-gap:10px;row-gap:7px;align-items:center;font-size:13px}
+.pb{display:contents}
+.pb i{display:block;height:12px}
+
+/* 휴대폰 */
+body.phone{overflow:auto}
+body.phone #stage{position:static;display:block}
+body.phone #board{width:100%;height:auto;min-height:100dvh;overflow:visible;font-size:16px;padding:calc(env(safe-area-inset-top) + 20px) 18px calc(env(safe-area-inset-bottom) + 96px);gap:20px}
+body.phone .hd{flex-wrap:wrap;row-gap:6px}
+body.phone .hd .sum{margin-left:0;width:100%}
+body.phone .main{flex-direction:column;gap:28px}
+body.phone .left{min-width:0}
+body.phone .side{width:auto;overflow:visible;font-size:16px}
+body.phone .scroll{overflow:visible}
+/* 아래 탭 막대 */
+body.phone nav.tabs{position:fixed;top:auto;left:0;right:0;bottom:0;z-index:5;flex-direction:row;justify-content:space-between;align-items:center;gap:0;background:var(--paper);border-top:1.5px solid var(--ink);padding:9px 10px calc(env(safe-area-inset-bottom) + 9px);font-size:14px}
+body.phone nav.tabs a{padding:3px 5px}
+body.phone nav.tabs a.on{margin-right:0;padding:3px 6px}
+body.phone .out{position:static;align-self:flex-start;font-size:12px}
+/* 오늘 */
+.ph{display:flex;flex-direction:column;gap:0;font-size:18px}
+.ph .todos{gap:12px}
+.ph .todo{gap:14px;align-items:flex-start}
+.ph .todo .tx{line-height:1.25}
+.ph .ck{width:20px;height:20px;border-width:3px;margin-top:1px}
+.ph .todo .tag{font-size:13px;margin-top:3px}
+.ph .add input{font-size:18px}
+
+.ph .sched{margin-top:28px;gap:5px}
+.ph .sched .e{font-size:16px}
+.ph .nw{margin-top:22px}
+.ph .nw .bk{max-width:calc(100vw - 120px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.ph-sum{margin-top:28px;font-size:12px}
+/* 오른쪽 목록 (달력·근무 등) */
+body.phone .side .todo{font-size:16px;gap:12px}
+body.phone .side .ck{width:18px;height:18px;border-width:2.5px}
+body.phone .side .todos{gap:10px}
+body.phone .ev{font-size:16px}
+body.phone .ev .t{width:40px}
+/* 달력 */
+body.phone .ctl{flex-wrap:wrap}
+body.phone .ctl .ttl{font-size:22px}
+body.phone .wd{padding:0 3px 5px;font-size:14px}
+body.phone .wk{height:auto;min-height:74px}
+body.phone .cell{padding:4px 3px 5px;font-size:11px;gap:2px;letter-spacing:-.02em}
+body.phone .cell b{margin-bottom:1px;padding:0 3px;margin-left:-3px;font-size:13px}
+
+body.phone .dh{flex-direction:column;gap:2px;font-size:10px;padding:0 0 5px 3px;align-items:center;padding-left:0;padding-top:9px}
+body.phone .blk{left:2px;right:2px;padding:3px;font-size:9.5px}
+body.phone .hours{font-size:9px}
+/* 프로젝트 · 근무 */
+body.phone .mr .nm{font-size:17px}
+body.phone .mr{grid-template-columns:minmax(0,1fr) 62px 78px 34px;column-gap:6px}
+body.phone .r{font-size:13px}
+body.phone .row{flex-wrap:wrap;row-gap:8px}
+/* 기록 */
+body.phone .diary{min-height:260px;font-size:17px}
+/* 식물 */
+body.phone .tlg{--nw:96px}
+body.phone .tl-row .nm b{font-size:14px}
+body.phone .tl-row i{width:11px;height:11px}
+/* 통계 */
+body.phone .big{grid-template-columns:repeat(2,minmax(0,1fr))}
+body.phone .big div:nth-child(3){border-left:0;padding-left:0;border-top:1.5px solid var(--ink)}
+body.phone .big div:nth-child(4){border-top:1.5px solid var(--ink)}
+body.phone .chart{gap:2px}
+body.phone .left > div[style*="gap:28px"]{flex-direction:column}
+.tm{font-style:normal}
+body.phone .tm{display:none}
+.ilist{display:flex;flex-direction:column;overflow-y:auto;min-height:0}
+.ir{display:grid;grid-template-columns:110px minmax(0,1fr) 120px 70px;gap:10px;border-top:1.5px solid var(--ink);padding:6px 0;font-size:15px}
+.ir:last-child{border-bottom:1.5px solid var(--ink)}
+body.phone .ir{grid-template-columns:78px minmax(0,1fr) 92px 52px;gap:6px;font-size:13px}
+.rz{margin:0 -7px;padding:1px 7px}
+body.phone .rz{margin:0 -3px;padding:1px 3px}
+.adl{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kinds{display:flex;gap:4px;margin-top:10px;font-size:14px}
+.kinds button{padding:2px 8px}
+.opts{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:13px;margin-top:4px}
+.opts button{padding:1px 0;border-bottom:2.5px solid transparent;text-align:left}
+.opts button.on{border-bottom-color:var(--ink)}
+.rzs{padding:0 3px;margin:0 -3px}
+/* 다이얼 */
+.sync{font-size:13px;padding:0 4px;margin-left:2px;align-self:center}
+body.phone .sync{font-size:15px}
+/* 달력 칸: 띄어쓰기만 고딕 글꼴의 좁은 빈칸으로 */
+@font-face{font-family:'KR Space';src:local('AppleSDGothicNeo-Bold'),local('Apple SD Gothic Neo Bold'),local('NotoSansKR-Bold'),local('Noto Sans KR Bold'),local('Noto Sans CJK KR Bold'),local('Malgun Gothic Bold');unicode-range:U+0020}
+
+.cell .ln{letter-spacing:-.01em}
+
+/* 누르면 뜨는 창 */
+.sh-bg{position:absolute;inset:0;z-index:20;background:transparent}
+.sheet{position:absolute;z-index:21;left:50%;top:50%;transform:translate(-50%,-50%);width:380px;max-height:720px;overflow:auto;box-sizing:border-box;background:var(--paper);border:2.5px solid var(--ink);padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px}
+.sh-head{display:flex;align-items:center;gap:10px;font-size:12px;letter-spacing:.02em}
+.sh-x{margin-left:auto;font-size:22px;line-height:1;padding:0 2px}
+.sh-title{font-size:20px;line-height:1.25;word-break:keep-all}
+.sh-body{display:flex;flex-direction:column}
+.sh-row{text-align:left;border-top:1.5px solid var(--ink);padding:11px 0;font-size:17px}
+.sh-row:last-child{border-bottom:1.5px solid var(--ink)}
+.sh-acts{display:flex;gap:16px;align-items:center;margin-top:14px}
+.sh-form{display:flex}
+.sh-date{border:0;border-bottom:3px solid var(--ink);background:transparent;padding:6px 0;font-size:18px;min-height:40px}
+.sh-tg{display:flex;gap:6px;margin-top:10px;font-size:14px}
+.sh-tg button{padding:2px 8px}
+.sheet .kinds{margin-bottom:4px}
+.sheet .opts{margin-bottom:8px}
+/* 바퀴 */
+.wheels{display:flex;gap:6px;align-items:center;margin-top:6px}
+.wt{padding:0 4px;font-size:15px}
+.wt.off{opacity:.25}
+.wgrp{display:flex;flex-direction:column;gap:4px}
+.wgrp.off{opacity:.25;pointer-events:none}
+
+.wrow{position:relative;display:flex;align-items:center}
+.wheel{height:84px;width:36px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;cursor:grab}
+.wheel::-webkit-scrollbar{display:none}
+.wpad{height:28px}
+.wi{height:28px;line-height:28px;text-align:center;font-size:22px;letter-spacing:-.04em;scroll-snap-align:center;color:var(--ink);font-weight:300}
+.wi.on{color:var(--ink);font-weight:700}
+.wc{font-size:22px;padding:0;margin-top:-3px}
+body.phone .sh-bg{position:fixed}
+body.phone .sheet{position:fixed;left:16px;right:16px;top:50%;bottom:auto;transform:translateY(-50%);width:auto;max-height:80vh;padding:18px 20px 20px}
+/* 오늘: 날짜 줄을 칸 너비로 꽉 채운 검은 띠 */
+.cell b:not(.now){margin-top:-1px;margin-bottom:7px}
+body.phone .cell b.now{margin:-4px -3px 1px;padding:3px 3px 2px}
+body.phone .cell b:not(.now){margin-top:-1px;margin-bottom:3px}
+.pick{background:var(--ink);color:var(--paper)}
+
+.wu{font-size:15px;padding:0 6px 0 1px;align-self:center}
+
+/* 프로젝트: 좁은 목록 + 넓은 상세 */
+.plist{width:220px;flex:none;display:flex;flex-direction:column;min-height:0}
+.pl{position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:4px;border-top:1.5px solid var(--ink);padding:9px 0 10px;cursor:pointer}
+.pl.last{border-bottom:1.5px solid var(--ink)}
+.pl .nm{font-size:17px;line-height:1.2;word-break:keep-all;padding:1px 4px;margin-left:-4px}
+
+.pdet{flex:1 1 0;min-width:0;display:flex;flex-direction:column;overflow-y:auto;font-size:16px}
+.ptitle{align-self:flex-end;text-align:right;font-size:34px;letter-spacing:-.02em;line-height:1.15;padding:14px 20px 16px;margin:0 0 22px;max-width:90%;cursor:text;word-break:keep-all}
+body.phone .ptitle{font-size:26px;padding:10px 14px 12px}
+.pv{display:grid;grid-template-columns:120px minmax(0,1fr);gap:16px;align-items:baseline;padding:7px 0;cursor:text}
+.pk{font-size:13px}
+.pval{line-height:1.35;word-break:keep-all}
+.pdet .note{font-size:15px;line-height:1.5}
+body.phone .plist{width:auto}
+body.phone .pv{grid-template-columns:90px minmax(0,1fr);gap:10px}
+.live{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);margin-right:7px;vertical-align:1px}
+.pl .live{margin:0 0 0 8px;vertical-align:2px}
+.nowbtn{align-self:flex-start;margin-bottom:12px;cursor:pointer;font-size:13px}
+.ph .nowbtn{margin:28px 0 -16px;font-size:14px}
+#clock{cursor:pointer;margin-left:8px}
+.sync[hidden]{display:none}
+#syncing{margin-left:-5px;padding:0}
+.wd span{text-align:center}
+
+.hj{font-style:normal;font-family:'Noto Sans KR','Noto Sans CJK KR','Apple SD Gothic Neo',sans-serif;font-size:.92em;font-weight:700;position:relative;top:-.05em;margin-left:.3em}
+.ent .hj{font-weight:900}
+
+.cell b.dim{font-weight:400}
+
+.bk .hj{font-size:1em;font-weight:900}
+body.phone .col{height:364px}
+body.phone [data-act="prev"],body.phone [data-act="next"]{display:none}
+/* 식물 타임라인: 이름 칸은 고정, 오른쪽만 옆으로 밀어 보기 */
+.tl-names{display:flex;flex-direction:column;flex:0 0 auto;min-width:var(--nw)}
+.tl-names .tl-h{height:22px;font-size:11px;box-sizing:border-box;border-bottom:1.5px solid var(--ink);display:flex;align-items:center}
+.tl-names .nm{height:40px;box-sizing:border-box;border-bottom:1.5px solid var(--ink);display:flex;align-items:center;min-width:0;cursor:pointer;padding-right:8px;gap:8px}
+.tl-names .nm b{font-size:15px;white-space:nowrap;padding:1px 4px;margin-left:-4px;overflow:visible;text-overflow:clip;max-width:none}
+.tl-names .nm.sel b{background:var(--ink);color:var(--paper)}
+body.phone .tl-names .nm b{font-size:14px}
+.tl-sc{flex:1;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tl-sc::-webkit-scrollbar{display:none}
+.tl-in{width:max-content;min-width:100%;position:relative}
+
+.tl-hd>span{white-space:nowrap;overflow:visible}
+.tl-row{height:40px;box-sizing:border-box;border-top:0;border-bottom:1.5px solid var(--ink)}
+.tl-row:last-child{border-bottom:1.5px solid var(--ink)}
+.tl-now{position:absolute;top:22px;bottom:0;width:1.5px;margin-left:-.75px;background:var(--red);z-index:0;pointer-events:none}
+
+.tlg > .pop{bottom:auto;z-index:5}
+
+.tl-names .nm small{font-size:12px;font-weight:500;white-space:nowrap}
+body.phone .tl-names .nm small{font-size:11px}
+.gone-s{display:none}
+body.phone .gone-l{display:none}
+body.phone .gone-s{display:inline-block;align-self:flex-start;margin-top:22px}
+.blk.over{z-index:auto}
+.blk.over:not([style*='left:calc']){left:5.4px;right:5.1px}
+body.phone .blk.over:not([style*='left:calc']){left:3.4px;right:3.1px}
+/* 주 달력 머리: 요일은 월 달력처럼 크고 굵게, 오늘은 칸 전체 검은 상자 */
+.dh .wd1{font-size:18px;font-weight:900;font-family:'Noto Sans KR','Noto Sans CJK KR','Apple SD Gothic Neo',sans-serif;line-height:1}
+body.phone .dh .wd1{font-size:14px}
+
+.dh.today{background:var(--ink);color:var(--paper)}
+
+body.phone .wgrid{grid-template-columns:15px repeat(7,minmax(0,1fr))}
+/* 기울인 초록 상자: 바탕만 돌리고 글씨는 똑바로 */
+.tilt{isolation:isolate;background:none!important}
+.tilt::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;transform:rotate(var(--r,0deg));background:#5fd97c url(tex.jpg) 0 0/240px 240px}
+.tilt.riso2::before{background-position:-90px -60px}
+.tilt.riso3::before{background-position:-160px -20px}
+html:has(body.phone),body.phone{overflow-x:hidden}
+body.phone .main > section.left{will-change:transform}
+
+body.phone .gr{grid-template-columns:auto minmax(0,1fr) 44px}
+body.phone .left.gone{flex:none}
+body.phone .pdet .ptitle{margin-top:8px;margin-right:3px}
+.pwheels{gap:4px}
+.pwheels .wheel{width:34px}
+.pwheels .wc{padding:0 1px}
+body.phone .pwheels .wheel{width:30px}
+body.phone .pwheels .wi{font-size:20px}
+.addev{align-self:flex-end;margin-top:10px;font-size:14px;background:var(--paper);border:2.5px solid var(--ink);padding:3px 9px;line-height:1.1}
+.sheet .kinds{margin-top:2px}
+.ev .et{margin-left:1em}
+/* 달력 안 초록 네모 기울이기: 바탕이 잘리지 않게 바깥은 열고 글자는 안쪽에서 자름 */
+.ln .lt{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ln.tilt{overflow:visible}
+.blk .bi{height:100%;overflow:hidden}
+.blk.tilt{overflow:visible}
+/* 달력 칸: 위아래는 칸에서 자르고, 옆으로는 초록 네모가 살짝 넘어가도 보이게 */
+.cell{overflow:visible;clip-path:inset(0 -8px)}
+.cell .rz{margin:0 -7px;padding:1px 7px;position:relative;z-index:-1}
+body.phone .cell .rz{margin:0 -3px;padding:1px 3px}
+.cell+.cell .rz{margin-left:-8.5px;padding-left:8.5px}
+body.phone .cell+.cell .rz{margin-left:-4.5px;padding-left:4.5px}
+/* 칸 세로줄은 초록 네모보다 위에 */
+.cell{position:relative}
+.cell+.cell{border-left:0}
+.cell+.cell::after{content:"";position:absolute;left:0;top:0;bottom:0;width:0;border-left:1.5px solid var(--ink);z-index:2;pointer-events:none}
+.cell+.cell{padding-left:8.5px}
+body.phone .cell+.cell{padding-left:4.5px}
+/* 주간 달력 층: 네모 바탕 < 글씨 < 빨간 지금 줄 < 검은 줄 < 빨간 네모 */
+.col{isolation:isolate}
+.blk.tilt{isolation:auto}
+.blk .bi{position:relative;z-index:2}
+.nowline{z-index:3}
+.nowsq{z-index:4}
+.ym{display:flex;align-items:baseline;gap:6px}
+.ym>span{font-size:22px;letter-spacing:-.01em}
+.ym button{font-size:15px;padding:0 4px}
+/* 할 일 끌어서 순서 바꾸기 */
+.todos .todo,.evf .ev{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.todos .todo.drag,.evf .ev.drag{opacity:.45}
+.evf{display:flex;flex-direction:column;gap:inherit}
