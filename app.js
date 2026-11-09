@@ -8,7 +8,9 @@ const DEMO = new URLSearchParams(location.search).has('demo');
 const WORKPLACES = [
   // name·keys: 일정 제목에 들어가면 이 근무지로 인식 / shifts: { 요일(일=0): [시작분, 끝분] } (09:00 = 540)
   // rate: 시급 / payday: 월급날(0 = 말일) / juhu: true 면 주휴수당 계산 / archived: true 면 보관함
-  { name: '근무지A', short: 'A', keys: ['근무지A', 'A'], shifts: { 1: [540, 1080], 2: [540, 1080], 3: [540, 1080] }, rate: 10320, payday: 10 },
+  { name: '다락', short: '다락', keys: ['다락'], shifts: { 1: [990, 1110], 2: [990, 1110], 3: [990, 1110], 4: [840, 1110], 5: [990, 1110] }, rate: 11000, payday: 0,
+    // 특정 날짜만 다르게: 날짜: [시작분, 끝분] / null 이면 그날은 쉼 (지난 달 것은 지워도 됨)
+    except: { '2026-11-18': [840, 1110], '2026-11-19': [990, 1110] } },
 ];
 
 const TABS = [
@@ -550,7 +552,7 @@ async function fillRoutine() {
   const rows = [];
   for (const w of WORKPLACES.filter((x) => !x.archived)) {
     for (let i = 1; i <= last; i++) {
-      const d = new Date(y, mo, i), ds = ymd(d), sh = w.shifts[d.getDay()];
+      const d = new Date(y, mo, i), ds = ymd(d), sh = (w.except && ds in w.except) ? w.except[ds] : w.shifts[d.getDay()];
       if (!sh || ds < today) continue;
       if (eventsOf(ds).some((e) => e.kind === 'work' && e.place === w.name)) continue;
       rows.push({ day: ds, start_min: sh[0], end_min: sh[1], title: w.name, kind: 'work', place: w.name });
